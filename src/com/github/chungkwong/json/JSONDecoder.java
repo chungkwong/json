@@ -18,11 +18,11 @@ public class JSONDecoder{
 	public static Object decode(Reader in) throws IOException,SyntaxException{
 		return walk(new PushbackReader(in),WALKER);
 	}
-	public static void walk(String json,JSONWalker walker) throws IOException,SyntaxException{
-		walk(new StringReader(json),walker);
+	public static Object walk(String json,JSONWalker walker) throws IOException,SyntaxException{
+		return walk(new StringReader(json),walker);
 	}
-	public static void walk(Reader in,JSONWalker walker) throws IOException,SyntaxException{
-		walk(new PushbackReader(in),walker);
+	public static Object walk(Reader in,JSONWalker walker) throws IOException,SyntaxException{
+		return walk(new PushbackReader(in),walker);
 	}
 	private static Object walk(PushbackReader in,JSONWalker walker) throws IOException,SyntaxException{
 		int c=readNonwhitespace(in);
