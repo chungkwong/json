@@ -68,11 +68,12 @@ public class JSONDecoder{
 	}
 	private static Object walkArray(PushbackReader in,JSONWalker walker) throws IOException, SyntaxException{
 		Object elements=new ArrayList<>();
+		int index=0;
 		int c=readNonwhitespace(in);
 		if(c!=']'){
 			in.unread(c);
 			while(true){
-				walker.onComponent(walk(in,walker),elements);
+				walker.onComponent(walk(in,walker),index++,elements);
 				c=readNonwhitespace(in);
 				if(c==']')
 					break;
@@ -170,7 +171,7 @@ public class JSONDecoder{
 			parent.put(index,value);
 		}
 		@Override
-		public void onComponent(Object value,List parent){
+		public void onComponent(Object value,int index,List parent){
 			parent.add(value);
 		}
 

@@ -13,7 +13,7 @@ public interface JSONWalker<M,L>{
 	M createMap();
 	L createList();
 	void onEntry(Object value,Object index,M parent);
-	void onComponent(Object value,L parent);
+	void onComponent(Object value,int index,L parent);
 	/*void onList(Object value,int index,Object parent);
 	void onList(Object value,Object index,Object parent);
 	void onBoolean(boolean value,int index,Object parent);
