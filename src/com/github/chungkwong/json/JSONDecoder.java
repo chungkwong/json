@@ -1,26 +1,73 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2017 Chan Chung Kwong <1m02math@126.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.chungkwong.json;
 import java.io.*;
 import java.util.*;
 /**
- *
+ * Being used to parse JSON
  * @author Chan Chung Kwong <1m02math@126.com>
  */
 public class JSONDecoder{
 	private static final int EOFException=-1;
+	/**
+	 * Turn a piece of JSON code into a Java object, where (nested) map
+	 * and list are turned in to Map and List respectively, number
+	 * becomes number, boolean becomes Boolean, string becomes String,
+	 * null becomes null
+	 * @param json the JSON code
+	 * @return the Java Object
+	 * @throws IOException
+	 * @throws SyntaxException
+	 */
 	public static Object decode(String json) throws IOException,SyntaxException{
 		return decode(new StringReader(json));
 	}
+	/**
+	 * Read a JSON object from a Reader and transform it into a Java Object
+	 * @param in the Reader
+	 * @return the Java Object
+	 * @throws IOException
+	 * @throws SyntaxException
+	 */
 	public static Object decode(Reader in) throws IOException,SyntaxException{
 		return walk(new PushbackReader(in),WALKER);
 	}
+	/**
+	 * Turn a piece of JSON code into a Java object, where (nested) map
+	 * and list are transformed according to a given rule, number
+	 * becomes number, boolean becomes Boolean, string becomes String,
+	 * null becomes null
+	 * @param json the JSON code
+	 * @param walker the rule
+	 * @return the Java Object
+	 * @throws IOException
+	 * @throws SyntaxException
+	 */
 	public static Object walk(String json,JSONWalker walker) throws IOException,SyntaxException{
 		return walk(new StringReader(json),walker);
 	}
+	/**
+	 * Read a JSON object from a Reader and transform it into a Java Object
+	 * @param in the Reader
+	 * @param walker the transform rule
+	 * @return the java Object
+	 * @throws IOException
+	 * @throws SyntaxException
+	 */
 	public static Object walk(Reader in,JSONWalker walker) throws IOException,SyntaxException{
 		return walk(new PushbackReader(in),walker);
 	}
@@ -67,7 +114,7 @@ public class JSONDecoder{
 		return members;
 	}
 	private static Object walkArray(PushbackReader in,JSONWalker walker) throws IOException, SyntaxException{
-		Object elements=new ArrayList<>();
+		Object elements=walker.createList();
 		int index=0;
 		int c=readNonwhitespace(in);
 		if(c!=']'){
